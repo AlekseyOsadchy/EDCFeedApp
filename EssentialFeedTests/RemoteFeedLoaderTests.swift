@@ -80,12 +80,12 @@ extension RemoteFeedLoaderTests {
     
     private func expect(sut: RemoteFeedLoader, toCompleteWithError error: RemoteFeedLoader.Error, when action: VoidClosure, file: StaticString = #filePath, line: UInt = #line) {
         
-        var captureError: [RemoteFeedLoader.Error] = []
-        sut.load { captureError.append($0) }
+        var captureResults: [RemoteFeedLoader.Result] = []
+        sut.load { captureResults.append($0) }
                 
         action()
         
-        XCTAssertEqual(captureError, [error], file: file, line: line)
+        XCTAssertEqual(captureResults, [.failure(error)], file: file, line: line)
     }
 }
 

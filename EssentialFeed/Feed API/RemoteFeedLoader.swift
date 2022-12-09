@@ -17,7 +17,7 @@ public protocol HTTPClient {
 }
 
 public final class RemoteFeedLoader {
-    public typealias LoadCompletion = (Error) -> Void
+    public typealias LoadCompletion = (Result) -> Void
     
     private let url: URL
     private let client: HTTPClient
@@ -33,9 +33,9 @@ public final class RemoteFeedLoader {
             
             switch result {
             case .success:
-                completion(.invalidData)
+                completion(.failure(.invalidData))
             case .failure:
-                completion(.connectivity)
+                completion(.failure(.connectivity))
             }
         }
     }
@@ -46,5 +46,13 @@ public extension RemoteFeedLoader {
     enum Error: Swift.Error {
         case connectivity
         case invalidData
+    }
+}
+
+public extension RemoteFeedLoader {
+    
+    enum Result: Equatable {
+        case success([FeedItem])
+        case failure(Error)
     }
 }
