@@ -48,17 +48,17 @@ final class RemoteFeedLoaderTests: XCTestCase {
         XCTAssertEqual(captureError, [.connectivity])
     }
     
-//    func test_load_deliversErrorOnNon200HTTPResponse() {
-//
-//        let (sut, client) = makeSUT()
-//
-//        client.complete(withStatusCode: 400)
-//
-//        var captureError: [RemoteFeedLoader.Error] = []
-//        sut.load { captureError.append($0) }
-//
-//        XCTAssertEqual(captureError, [.invalidData])
-//    }
+    func test_load_deliversErrorOnNon200HTTPResponse() {
+
+        let (sut, client) = makeSUT()
+
+        var captureError: [RemoteFeedLoader.Error] = []
+        sut.load { captureError.append($0) }
+        
+        client.complete(withStatusCode: 400)
+
+        XCTAssertEqual(captureError, [.invalidData])
+    }
 }
 
 // MARK: - Helpers
@@ -74,19 +74,28 @@ extension RemoteFeedLoaderTests {
 extension RemoteFeedLoaderTests {
     
     class HTTPClientSpy: HTTPClient {
+        typealias ResponseCompletion = (Error?, HTTPURLResponse?) -> Void
         
-        var messages: [(url: URL, completion: (Error) -> Void)] = []
+        var messages: [(url: URL, completion: ResponseCompletion)] = []
         
         var requestedURLs: [URL] {
             return messages.map { $0.url }
         }
         
-        func get(from url: URL, completion: @escaping (Error) -> Void) {
+        func get(from url: URL, completion: @escaping ResponseCompletion) {
             messages.append((url, completion))
         }
         
         func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(error)
+            messages[index].completion(error, nil)
+        }
+        
+        func complete(withStatusCode code: Int, at index: Int = 0) {
+            let response = HTTPURLResponse(url: requestedURLs[index],
+                                           statusCode: code,
+                                           httpVersion: nil,
+                                           headerFields: nil)
+            messages[index].completion(nil, response)
         }
     }
 }
