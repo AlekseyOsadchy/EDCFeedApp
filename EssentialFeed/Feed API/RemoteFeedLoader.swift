@@ -33,5 +33,6 @@ public extension RemoteFeedLoader {
     
     enum Error: Swift.Error {
         case connectivity
+//        case invalidData
     }
 }
