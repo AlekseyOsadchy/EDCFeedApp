@@ -77,7 +77,7 @@ extension RemoteFeedLoaderTests {
 extension RemoteFeedLoaderTests {
     
     class HTTPClientSpy: HTTPClient {
-        typealias ResponseCompletion = (Error?, HTTPURLResponse?) -> Void
+        typealias ResponseCompletion = (HTTPClientResult) -> Void
         
         var messages: [(url: URL, completion: ResponseCompletion)] = []
         
@@ -90,15 +90,15 @@ extension RemoteFeedLoaderTests {
         }
         
         func complete(with error: Error, at index: Int = 0) {
-            messages[index].completion(error, nil)
+            messages[index].completion(.failure(error))
         }
         
         func complete(withStatusCode code: Int, at index: Int = 0) {
             let response = HTTPURLResponse(url: requestedURLs[index],
                                            statusCode: code,
                                            httpVersion: nil,
-                                           headerFields: nil)
-            messages[index].completion(nil, response)
+                                           headerFields: nil)!
+            messages[index].completion(.success(response))
         }
     }
 }
