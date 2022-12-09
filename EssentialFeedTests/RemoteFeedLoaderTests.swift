@@ -17,11 +17,22 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
     
     func test_load_requestsDataFromURL() {
-        let (sut, client) = makeSUT()
+        let url = URL(string: "https://www.google.com")!
+        let (sut, client) = makeSUT(url: url)
         
         sut.load()
         
-        XCTAssertNotNil(client.requestedURL)
+        XCTAssertEqual(client.requestedURL, url)
+    }
+    
+    func test_loadTwice_requestsDataFromURLTwice() {
+        let url = URL(string: "https://www.google.com")!
+        let (sut, client) = makeSUT(url: url)
+        
+        sut.load()
+        sut.load()
+        
+        XCTAssertEqual(client.requestedURLs, [url, url])
     }
 }
 
@@ -39,9 +50,11 @@ extension RemoteFeedLoaderTests {
     
     class HTTPClientSpy: HTTPClient {
         var requestedURL: URL?
+        var requestedURLs: [URL] = []
         
         func get(from url: URL) {
             requestedURL = url
+            requestedURLs.append(url)
         }
     }
 }
