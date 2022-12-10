@@ -8,6 +8,7 @@
 import Foundation
 
 public final class RemoteFeedLoader {
+    public typealias Result = LoadFeedResult<Error>
     public typealias LoadCompletion = (Result) -> Void
     
     private let url: URL
@@ -38,13 +39,5 @@ public extension RemoteFeedLoader {
     enum Error: Swift.Error {
         case connectivity
         case invalidData
-    }
-}
-
-public extension RemoteFeedLoader {
-    
-    enum Result: Equatable {
-        case success([FeedItem])
-        case failure(Error)
     }
 }
