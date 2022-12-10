@@ -1,5 +1,5 @@
 //
-//  FeedItemMapper.swift
+//  FeedItemsMapper.swift
 //  EssentialFeed
 //
 //  Created by Aleksey Osadchy on 10.12.2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal final class FeedItemMapper {
+internal final class FeedItemsMapper {
     
     enum StatusCode {
         static let ok = 200
@@ -15,6 +15,10 @@ internal final class FeedItemMapper {
     
     private struct Root: Decodable {
         let items: [Item]
+        
+        var feed: [FeedItem] {
+            return items.map({ $0.item })
+        }
     }
 
     private struct Item: Decodable {
@@ -28,8 +32,12 @@ internal final class FeedItemMapper {
         }
     }
     
-    internal static func map(data: Data, response: HTTPURLResponse) throws -> [FeedItem] {
-        guard response.statusCode == StatusCode.ok else { throw RemoteFeedLoader.Error.invalidData }
-        return try JSONDecoder().decode(Root.self, from: data).items.map { $0.item }
+    internal static func map(_ data: Data, from response: HTTPURLResponse) -> RemoteFeedLoader.Result {
+        guard response.statusCode == StatusCode.ok,
+              let root = try? JSONDecoder().decode(Root.self, from: data) else {
+            return .failure(.invalidData)
+        }
+        
+        return .success(root.feed)
     }
 }
