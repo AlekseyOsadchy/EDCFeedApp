@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class RemoteFeedLoader {
+public final class RemoteFeedLoader: FeedLoader {
     public typealias Result = LoadFeedResult<Error>
     public typealias LoadCompletion = (Result) -> Void
     
