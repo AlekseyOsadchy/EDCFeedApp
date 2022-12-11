@@ -67,7 +67,7 @@ final class URLSessionHTTPClientTest: XCTestCase {
                 XCTAssertEqual(receivedError.code, error.code)
                 
             default:
-                XCTFail("Expected failure with error \(error), got \(result) insted")
+                XCTFail("Expected failure with error \(error), got \(result) instead")
             }
             exp.fulfill()
         }
@@ -84,13 +84,6 @@ extension URLSessionHTTPClientTest {
         let sut = URLSessionHTTPClient()
         trackMemoryLeaks(sut, file: file, line: line)
         return sut
-    }
-    
-    private func trackMemoryLeaks(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
-        
-        addTeardownBlock { [weak instance] in
-            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
-        }
     }
 }
 
