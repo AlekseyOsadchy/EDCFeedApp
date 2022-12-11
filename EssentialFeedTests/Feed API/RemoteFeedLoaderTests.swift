@@ -162,7 +162,6 @@ extension RemoteFeedLoaderTests {
             exp.fulfill()
         }
         
-                
         action()
         
         wait(for: [exp], timeout: 1.0)
