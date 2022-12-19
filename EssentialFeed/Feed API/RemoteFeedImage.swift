@@ -1,5 +1,5 @@
 //
-//  RemoteFeedItem.swift
+//  RemoteFeedImage.swift
 //  EssentialFeed
 //
 //  Created by Aleksey Osadchy on 19.12.2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RemoteFeedItem: Decodable {
+struct RemoteFeedImage: Decodable {
     let id: UUID
     let description: String?
     let location: String?
