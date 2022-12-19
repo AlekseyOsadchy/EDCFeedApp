@@ -9,7 +9,8 @@ import Foundation
 
 public final class LocalFeedLoader {
     public typealias TimestampProvider = () -> Date
-    public typealias SaveCompletion = (Error?) -> Void
+    public typealias SaveCompletion = (SaveResult) -> Void
+    public typealias SaveResult = Error?
     
     let store: FeedStore
     let currentDate: TimestampProvider
