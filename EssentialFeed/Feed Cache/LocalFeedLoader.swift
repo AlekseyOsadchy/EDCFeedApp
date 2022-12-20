@@ -49,7 +49,6 @@ public final class LocalFeedLoader {
                 completion(.success(feed.toModels()))
                 
             case .found:
-                self.store.deleteCachedFeed { _ in }
                 completion(.success([]))
                 
             case .empty:
@@ -61,10 +60,13 @@ public final class LocalFeedLoader {
     public func validateCache() {
         store.retrieve { [unowned self] result in            
             switch result {
-            case let .failure(error):
+            case .failure:
                 self.store.deleteCachedFeed(completion: { _ in })
                 
-            default:
+            case .found(_, let timestamp) where !validate(timestamp):
+                self.store.deleteCachedFeed(completion: { _ in })
+                
+            case .empty, .found:
                 break
             }
         }
