@@ -115,24 +115,6 @@ extension CacheFeedUseCaseTests {
         return (sut, store)
     }
     
-    private func anyURL() -> URL {
-        return URL(string: "https://a-url.com")!
-    }
-    
-    private func anyNSError() -> NSError {
-        return NSError(domain: "any error", code: 0)
-    }
-    
-    private func uniqueImage() -> FeedImage {
-        return FeedImage(id: UUID(), description: nil, location: nil, url: anyURL())
-    }
-    
-    private func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
-        let feed = [uniqueImage(), uniqueImage()]
-        let localFeed = feed.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url) }
-        return (feed, localFeed)
-    }
-    
     private func expect(_ sut: LocalFeedLoader,
                         toCompleteWithError expectedError: NSError?,
                         when action: () -> Void,
