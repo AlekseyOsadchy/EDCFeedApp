@@ -9,10 +9,6 @@ import Foundation
 
 public final class LocalFeedLoader {
     public typealias TimestampProvider = () -> Date
-    public typealias SaveCompletion = (SaveResult) -> Void
-    public typealias RetrieveCompletion = (RetrieveResult) -> Void
-    public typealias SaveResult = Error?
-    public typealias RetrieveResult = LoadFeedResult
     
     private let calendar = Calendar(identifier: .gregorian)
     private let store: FeedStore
@@ -35,6 +31,8 @@ public final class LocalFeedLoader {
 }
  
 extension LocalFeedLoader {
+    public typealias SaveResult = Error?
+    public typealias SaveCompletion = (SaveResult) -> Void
     
     public func save(_ feed: [FeedImage], completion: @escaping SaveCompletion) {
         store.deleteCachedFeed { [weak self] error in
@@ -56,6 +54,8 @@ extension LocalFeedLoader {
 }
 
 extension LocalFeedLoader: FeedLoader {
+    public typealias RetrieveCompletion = (RetrieveResult) -> Void
+    public typealias RetrieveResult = LoadFeedResult
     
     public func load(completion: @escaping RetrieveCompletion) {
         store.retrieve() { [weak self] result in
