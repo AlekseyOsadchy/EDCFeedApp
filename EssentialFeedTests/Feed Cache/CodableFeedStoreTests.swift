@@ -137,7 +137,9 @@ final class CodableFeedStoreTests: XCTestCase {
 
 private extension CodableFeedStoreTests {
     
-    func makeSUT() -> CodableFeedStore {
-        return CodableFeedStore()
+    func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
+        let sut = CodableFeedStore()
+        trackMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
