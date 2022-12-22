@@ -117,7 +117,7 @@ final class CodableFeedStoreTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
         
-        expect(sut, toRetrieveTwice: .empty)
+        expect(sut, toRetrieveTwice: .found(feed: feed, timestamp: timestamp))
     }
 }
 
