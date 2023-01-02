@@ -25,21 +25,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     func test_load_deliversNoItemsOnEmptyCache() {
         let sut = makeSUT()
         
-        let exp = expectation(description: "Wait for load completion")
-        
-        sut.load { result in
-            switch result {
-            case let .success(imageFeed):
-                XCTAssertEqual(imageFeed, [])
-                
-            case .failure:
-                XCTFail("Expect successful result, got \(result) instead")
-            }
-            
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWith: .success([])) {  }
     }
     
     func test_load_deliversItemsSavedOnASeparateInstance() {
@@ -55,24 +41,13 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         
         wait(for: [saveExp], timeout: 1.0)
         
-        let loadExp = expectation(description: "Wait for load completion")
-        sutToPerformLoad.load { result in
-            switch result {
-            case let .success(imageFeed):
-                XCTAssertEqual(imageFeed, feed)
-            case let .failure(error):
-                XCTFail("Expect successful result, got \(error) instead")
-            }
-            loadExp.fulfill()
-        }
-        
-        wait(for: [loadExp], timeout: 1.0)
+        expect(sutToPerformLoad, toCompleteWith: .success(feed)) {  }
     }
  }
 
 // MARK: - Helpers
 
-extension EssentialFeedCacheIntegrationTests {
+private extension EssentialFeedCacheIntegrationTests {
     
     func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> LocalFeedLoader {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
@@ -84,23 +59,49 @@ extension EssentialFeedCacheIntegrationTests {
         return sut
     }
     
-    private func testSpecificStoreURL() -> URL {
+    private func expect(_ sut: LocalFeedLoader,
+                        toCompleteWith expectedResult: LocalFeedLoader.RetrieveResult,
+                        when action: () -> Void,
+                        file: StaticString = #filePath,
+                        line: UInt = #line) {
+        
+        let exp = expectation(description: "Wait for load completion")
+        
+        sut.load() { retrieveResult in
+            switch (retrieveResult, expectedResult) {
+            case let (.success(images), .success(expectedImages)):
+                XCTAssertEqual(images, expectedImages, file: file, line: line)
+            case let (.failure(error as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(error.domain, expectedError.domain, file: file, line: line)
+                XCTAssertEqual(error.code, expectedError.code, file: file, line: line)
+            default:
+                XCTFail("Expect \(expectedResult), got \(expectedResult) instead", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1)
+    }
+    
+    func testSpecificStoreURL() -> URL {
         return cacheDirectory().appendingPathExtension("\(type(of: self)).store")
     }
     
-    private func cacheDirectory() -> URL {
+    func cacheDirectory() -> URL {
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
     
-    private func undoStoreSideEffects() {
+    func undoStoreSideEffects() {
         deleteStoreArtifacts()
     }
     
-    private func setupEmptyStoreState() {
+    func setupEmptyStoreState() {
         deleteStoreArtifacts()
     }
     
-    private func deleteStoreArtifacts() {
+    func deleteStoreArtifacts() {
         try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
 }
