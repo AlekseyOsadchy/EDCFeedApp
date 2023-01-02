@@ -84,8 +84,6 @@ class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     func test_insert_deliversErrorOnInsertionError() {
         let invalidURL = URL(string: "invalid://store-url")!
         let sut = makeSUT(storeURL: invalidURL)
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
         
         assertThatInsertDeliversErrorOnInsertionError(on: sut)
     }
@@ -93,8 +91,6 @@ class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     func test_insert_hasNoSideEffectsOnInsertionError() {
         let invalidURL = URL(string: "invalid://store-url")!
         let sut = makeSUT(storeURL: invalidURL)
-        let feed = uniqueImageFeed().local
-        let timestamp = Date()
         
         assertThatInsertHasNoSideEffectsOnInsertionError(on: sut)
     }
