@@ -19,6 +19,8 @@
 		74294E0729635B730077A577 /* EssentialFeedCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74294E0629635B730077A577 /* EssentialFeedCacheIntegrationTests.swift */; };
 		74294E0829635B730077A577 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74EAB45F293FE3170079AC9F /* EssentialFeed.framework */; };
 		74294E0E29635F380077A577 /* XCTestCase+MemoryLeakTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740E72402946156A0017ECBC /* XCTestCase+MemoryLeakTracker.swift */; };
+		74294E0F296362320077A577 /* FeedCacheTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B8873929525AE4006B4292 /* FeedCacheTestHelpers.swift */; };
+		74294E102963639E0077A577 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74B8873B29525B99006B4292 /* SharedTestHelpers.swift */; };
 		745779952955DDD700C8F4D6 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745779942955DDD700C8F4D6 /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift */; };
 		745779972955DF1900C8F4D6 /* XCTestCase+FailableInsertFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745779962955DF1900C8F4D6 /* XCTestCase+FailableInsertFeedStoreSpecs.swift */; };
 		745779992955DF9B00C8F4D6 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745779982955DF9B00C8F4D6 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift */; };
@@ -487,7 +489,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74294E102963639E0077A577 /* SharedTestHelpers.swift in Sources */,
 				74294E0729635B730077A577 /* EssentialFeedCacheIntegrationTests.swift in Sources */,
+				74294E0F296362320077A577 /* FeedCacheTestHelpers.swift in Sources */,
 				74294E0E29635F380077A577 /* XCTestCase+MemoryLeakTracker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
