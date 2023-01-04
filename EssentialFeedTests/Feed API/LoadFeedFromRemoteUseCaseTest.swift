@@ -130,9 +130,9 @@ extension LoadFeedFromRemoteUseCaseTests {
         
         let item = FeedImage(id: id, description: description, location: location, url: imageURL)
         let json: [String: Any] = ["id": item.id.uuidString,
-                                   "description": item.description as Any,
-                                   "location": item.location as Any,
-                                   "image": item.url.absoluteString]
+                                   "description": item.description,
+                                   "location": item.location,
+                                   "image": item.url.absoluteString].compactMapValues { $0 }
         return (item, json)
     }
     
