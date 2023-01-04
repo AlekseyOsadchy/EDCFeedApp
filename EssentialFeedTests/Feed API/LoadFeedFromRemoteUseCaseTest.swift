@@ -175,7 +175,7 @@ extension LoadFeedFromRemoteUseCaseTests {
 extension LoadFeedFromRemoteUseCaseTests {
     
     class HTTPClientSpy: HTTPClient {
-        typealias ResponseCompletion = (HTTPClientResult) -> Void
+        typealias ResponseCompletion = (HTTPClient.Result) -> Void
         
         var messages: [(url: URL, completion: ResponseCompletion)] = []
         
