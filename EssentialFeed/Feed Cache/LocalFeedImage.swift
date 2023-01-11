@@ -1,13 +1,13 @@
 //
-//  FeedItem.swift
+//  LocalFeedImage.swift
 //  EssentialFeed
 //
-//  Created by Aleksey Osadchy on 06.12.2022.
+//  Created by Aleksey Osadchy on 19.12.2022.
 //
 
 import Foundation
 
-public struct FeedImage: Equatable {
+public struct LocalFeedImage: Equatable, Codable {
     
     public let id: UUID
     public let description: String?

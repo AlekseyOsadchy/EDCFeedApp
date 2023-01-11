@@ -13,11 +13,11 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     func test_endToEndTestServerGetFeedResult_matchesFixedTestAccountData() {
         
         switch getFeedResult() {
-        case let .success(items)?:
-            XCTAssertEqual(items.count, 8, "Expectation 8 items in the test account feed")
+        case let .success(imageFeed)?:
+            XCTAssertEqual(imageFeed.count, 8, "Expectation 8 images in the test account images feed")
             
-            items.enumerated().forEach { index, item in
-                XCTAssertEqual(item, expectedItem(at: index), "Unexpected item values at index \(index)")
+            imageFeed.enumerated().forEach { index, item in
+                XCTAssertEqual(item, expectedImage(at: index), "Unexpected item values at index \(index)")
             }
             
         case let .failure(error)?:
@@ -31,7 +31,7 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
 
 private extension EssentialFeedAPIEndToEndTests {
     
-    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> LoadFeedResult? {
+    private func getFeedResult(file: StaticString = #filePath, line: UInt = #line) -> FeedLoader.Result? {
         
         let testServerURL = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let client = URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
@@ -42,13 +42,13 @@ private extension EssentialFeedAPIEndToEndTests {
         
         let exp = expectation(description: "Wait a load completion")
         
-        var receivedResult: LoadFeedResult?
+        var receivedResult: FeedLoader.Result?
         loader.load { result in
             receivedResult = result
             exp.fulfill()
         }
         
-        wait(for: [exp], timeout: 10.0)
+        wait(for: [exp], timeout: 20.0)
         sleep(5)
         return receivedResult
     }
@@ -56,12 +56,12 @@ private extension EssentialFeedAPIEndToEndTests {
 
 private extension EssentialFeedAPIEndToEndTests {
     
-    private func expectedItem(at index: Int) -> FeedItem {
+    private func expectedImage(at index: Int) -> FeedImage {
         
-        return FeedItem(id: id(at: index),
+        return FeedImage(id: id(at: index),
                         description: description(at: index),
                         location: location(at: index),
-                        imageURL: imageURL(at: index))
+                        url: imageURL(at: index))
     }
     
     private func id(at index: Int) -> UUID {

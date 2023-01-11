@@ -126,13 +126,13 @@ extension LoadFeedFromRemoteUseCaseTests {
     private func makeItem(id: UUID,
                           description: String? = nil,
                           location: String? = nil,
-                          imageURL: URL) -> (model: FeedItem, json: [String: Any]) {
+                          imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
         
-        let item = FeedItem(id: id, description: description, location: location, imageURL: imageURL)
+        let item = FeedImage(id: id, description: description, location: location, url: imageURL)
         let json: [String: Any] = ["id": item.id.uuidString,
-                                   "description": item.description as Any,
-                                   "location": item.location as Any,
-                                   "image": item.imageURL.absoluteString]
+                                   "description": item.description,
+                                   "location": item.location,
+                                   "image": item.url.absoluteString].compactMapValues { $0 }
         return (item, json)
     }
     
@@ -175,7 +175,7 @@ extension LoadFeedFromRemoteUseCaseTests {
 extension LoadFeedFromRemoteUseCaseTests {
     
     class HTTPClientSpy: HTTPClient {
-        typealias ResponseCompletion = (HTTPClientResult) -> Void
+        typealias ResponseCompletion = (HTTPClient.Result) -> Void
         
         var messages: [(url: URL, completion: ResponseCompletion)] = []
         
@@ -199,7 +199,7 @@ extension LoadFeedFromRemoteUseCaseTests {
                                            statusCode: code,
                                            httpVersion: nil,
                                            headerFields: nil)!
-            messages[index].completion(.success(data, response))
+            messages[index].completion(.success((data, response)))
         }
     }
 }

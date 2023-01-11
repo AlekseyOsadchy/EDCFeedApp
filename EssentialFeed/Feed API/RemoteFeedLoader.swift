@@ -8,7 +8,7 @@
 import Foundation
 
 public final class RemoteFeedLoader: FeedLoader {
-    public typealias Result = LoadFeedResult
+    public typealias Result = FeedLoader.Result
     public typealias LoadCompletion = (Result) -> Void
     
     private let url: URL
@@ -25,11 +25,21 @@ public final class RemoteFeedLoader: FeedLoader {
             guard self != nil else { return }
             
             switch result {
-            case let .success(data, response):
-                completion(FeedItemsMapper.map(data, from: response))
+            case let .success((data, response)):
+                completion(Self.map(data, from: response))
+                
             case .failure:
                 completion(.failure(Error.connectivity))
             }
+        }
+    }
+    
+    private static func map(_ data: Data, from response: HTTPURLResponse) -> Result {
+        do {
+            let remoteItems = try FeedItemsMapper.map(data, from: response)
+            return .success(remoteItems.toModels())
+        } catch {
+            return .failure(error)
         }
     }
 }
@@ -39,5 +49,12 @@ public extension RemoteFeedLoader {
     enum Error: Swift.Error {
         case connectivity
         case invalidData
+    }
+}
+
+private extension Array where Element == RemoteFeedImage {
+    
+    func toModels() -> [FeedImage] {
+        return map { FeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.image) }
     }
 }
